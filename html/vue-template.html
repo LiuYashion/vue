@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../script/vue.js"></script>
+	</head>
+	<body>
+		<div id="demo">
+			<div v-bind:id="describe">{{ describe | toLowerCase }}</div>
+			<div id="describe" v-html="stringHTML"></div>
+			<button v-bind:disabled="isDisable">Button</button>
+			<div v-if="isShown">{{ 'isShown:'+isShown }}</div>
+			<a v-bind:href="url">to Baidu</a>
+			<div v-on:click='onClick'>Click Me</div>
+		</div>
+	</body>
+	<script>
+		
+		var demo = new Vue({
+			
+			el: '#demo',
+			
+		  	data: {
+		    	describe: 'aN Vue exAmpLe',
+		    	stringHTML:'<span style="color:lightblue">span</span>',
+		    	isDisable:true,
+		    	isShown:true,
+		    	url:'http://www.baidu.com',
+		    	onClick:function(){
+					console.log('click')
+				}
+		  	},
+			
+			created: function () {
+				
+			},
+			
+			filters: {
+    			toLowerCase: function (value) {
+      				value = value.toString()
+      				return value.toLowerCase()
+    			}
+  			}
+
+		})
+
+		
+	</script>
+	<script>
+		
+
+		
+	</script>
+</html>

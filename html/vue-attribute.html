@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../script/vue.js"></script>
+		<script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+		<script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+	</head>
+	<body>
+		<div id="demo">
+			<div>origin info: "{{ info }}"</div>
+			<div>compute info: "{{ infoToLower }}"</div>
+			
+			<div>present time: "{{ getTimeNow }}"</div>
+			<div>{{ fullInfo }}</div>
+			
+			<input v-model="question">
+			<p>{{ answer }}</p>
+		</div>
+	</body>
+	<script>
+		
+		var demo = new Vue({
+			
+			el: '#demo',
+		  	data: {
+		  		question: 'temp',
+				info: 'VUE OBJECT',
+				answer: 'I cannot give you an answer until you ask a question!'
+		  	},
+		  	computed: {
+		  		fullInfo:{
+		  			get: function(){
+		  				return "feedback by fullInfo'get"
+		  			},
+		  			set:function(newValue){
+		  				return "feedback by fullInfo'set"
+		  			}
+		  		},
+		  		infoToLower: function(){
+		  			return this.info.toString().toLowerCase()
+		  		},
+		  		getTimeNow: function(){
+		  			return new Date()
+		  		}
+		  	},
+		  	watch: {
+    			question: function (newQuestion) {
+      				this.answer = 'Waiting for you to stop typing...'
+      				this.getAnswer()
+    			}
+  			},
+		  	methods: {
+		  		getTimeNow_:function(){
+		  			return new Date()
+		  		},
+		  		getAnswer: _.debounce(
+      				function(){
+        				var vm = this
+        				if (this.question.indexOf('?') === -1) {
+          					vm.answer = 'Questions usually contain a question mark. ;-)'
+          					return
+        				}
+        				vm.answer = 'Thinking...'
+       					axios.get('https://yesno.wtf/api')
+          				.then(function (response) {
+            				vm.answer = _.capitalize(response.data.answer)
+          				})
+          				.catch(function (error) {
+            				vm.answer = 'Error! Could not reach the API. ' + error
+          				})
+      				},
+      				500
+    			)
+		  	}
+			
+		})
+		
+		/**
+		 * 1. 在外部demo.info = 'GOODBYE'这样改变数据
+		 */
+		
+	</script>
+	<script>
+		/**
+		 * 1. 计算属性&method: 	计算属性基于依赖进行缓存,依赖不变,结果就不会重新计算.method中会实时返回,不会缓存
+		 * 2. watch&computed:	注意两个方法使用场景,大部分计算放在computed,必要场景使用watch
+		 * 3. computed的set&get:	如上
+		 * 4. watch:			可以用于控制异步操作,然后再调用method.对于中间态,可用通过watch来控制
+		 */
+
+		
+	</script>
+</html>

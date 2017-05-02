@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../script/vue.js"></script>
+		<script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+		<script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+	</head>
+	<style>
+		.coral-color{
+			color: lightcoral;
+		}
+		.blue-color{
+			color: lightblue;
+		}
+		.higlight{
+			text-decoration: underline;
+		}
+		.bolder{
+			font-weight: bolder;
+		}
+	</style>
+	<body>
+		<div id="demo">
+			<div v-bind:class="{ 'coral-color': isCoral }">{{ info }}</div>
+			<div v-bind:class="cssActive">{{ info }}</div>
+			<div v-bind:class="[highLight, fontBolder]">{{ info }}</div>
+			
+			<div v-bind:style="{ color:divColor, fontSize:fontSize+'px' }">{{ info }}</div>
+			<div v-bind:style="[styleObject]">{{ info }}</div>
+		</div>
+	</body>
+	<script>
+		
+		var demo = new Vue({
+			
+			el: '#demo',
+		  	data: {
+		  		isCoral:true,
+				info: 'vue-object',
+				cssActive:{
+					'blue-color':true,
+					'font-bolder':false
+				},
+				highLight:'higlight',
+  				fontBolder:'bolder',
+  				divColor:'lightgreen',
+  				fontSize:20,
+  				styleObject:{
+  					color:'pink',
+  					fontSize:'24px'
+  				}
+		  	},
+		  	
+		})
+		
+		
+	</script>
+	<script>
+		/**
+		 * 1. class使用对象字面量
+		 * 2. class使用变量
+		 * 3. class使用数组
+		 * 
+		 * 1. style使用对象字面量
+		 * 2. style使用变量
+		 * 
+		 * 1. 在template中添加的属性和内联className不会冲突
+		 * 
+		 * 1. 可以使用三目运算符
+		 */
+		
+	</script>
+</html>
