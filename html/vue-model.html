@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../script/vue.js"></script>
+	</head>
+	
+	<body>
+		<div id="demo">
+			<input v-model="intro" placeholder="please input">
+			<div>{{ intro }}</div>
+			<textarea v-model="intro" placeholder="add multiple lines"></textarea>
+			
+			<input type="radio" id="jack" value="Jack~" v-model="checkedNames"> <label for="jack">Jack</label>
+			<input type="radio" id="john" value="John~" v-model="checkedNames"> <label for="john">John</label>
+			<input type="radio" id="mike" value="Mike~" v-model="checkedNames"> <label for="mike">Mike</label>
+			
+			<span>Checked names: {{ checkedNames }}</span>
+			
+			<br />
+			<select v-model="selected">
+		    	<option>A</option>
+		    	<option>B</option>
+		    	<option>C</option>
+		  	</select>
+		  	<span>Selected: {{ selected }}</span>
+			
+			<input type="radio" v-model="picked" value="a"><span>{{ picked }}</span>
+			
+		</div>
+	</body>
+	<script>
+		
+		var demo = new Vue({
+			
+			el:'#demo',
+			data:{
+				intro: 'input',
+				checkedNames: [],
+				selected: null,
+				picked:'-'
+			}
+			
+		})
+		
+		
+	</script>
+	<script>
+		
+		
+	</script>
+</html>

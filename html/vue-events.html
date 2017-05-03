@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../script/vue.js"></script>
+	</head>
+	
+	<body>
+		<div id="demo">
+			<div>{{ intro }}</div>
+			
+			<div v-on:click="counter+=1">click time: {{counter}}</div>
+			
+			<div v-on:click="clickFun">function</div>
+			
+			<div v-on:click="alertMessage('mocha')">message</div>
+			
+			<div v-on:click="passEvent($event)">event</div>
+			
+			<a v-on:click.stop="doThis"></a>
+			
+			<input v-on:keyup.13="submit">
+			
+		</div>
+	</body>
+	<script>
+		
+		var demo = new Vue({
+			
+			el:'#demo',
+			data:{
+				intro: '时间管理器',
+				counter:0,
+				clickFun: function(event){
+					console.log(event.target)
+				},
+				alertMessage: function(msg){
+					alert(msg)
+				},
+				passEvent: function(event){
+					console.log(event)
+				}
+			}
+			
+		})
+		
+		
+	</script>
+	<script>
+		/**
+		 * 	.stop可以阻止冒泡
+		 * 	keyup.13可以用于判断回车
+		 * 	.enter
+			.tab
+			.delete (捕获 “删除” 和 “退格” 键)
+			.esc
+			.space
+			.up
+			.down
+			.left
+			.right
+		 */
+		
+		
+	</script>
+</html>
