@@ -9,15 +9,7 @@
 	<body>
 		<div id="demo">
 			<div>{{ intro }}</div>
-			
-			<div v-for="(item, index) in lists">
-				{{ item.message }} - {{ index }}
-			</div>
-			
-			<div v-for="(value, key, index) in object">
-				{{ value }} : {{ key }} in {{ index }}
-			</div>
-			
+
 		</div>
 	</body>
 	<script>
@@ -27,38 +19,14 @@
 			el:'#demo',
 			data:{
 				intro: 'I am a brief introduction',
-				lists: [
-					{ message: 'Alo' },
-					{ message: 'Boot' },
-					{ message: 'Colu' },
-					{ message: 'Dete' },
-					{ message: 'Ender' }
-				],
-				object:{
-					name:'Dopa',
-					location:'ShenZhen',
-					intro:'A brief introduction'
-				}
 			}
 			
 		})
 		
-		demo.lists[2] = { message: 'XXXtra' }	//直接通过索引更新数组不会触发更新
-		
-		Vue.set(demo.lists, 2, { message: 'XXXtra' }) //这样就可以触发更新
-		
+
 	</script>
 	<script>
-		
-		/**
-		 * 1. v-if & v-show if条件渲染,show只是css上面的display,频繁切换的话用show
-		 * 2. v-for比v-if具有更高的优先级
-		 * 3. 对于自定义组件, v-for不会自动传递数据, 需要显式在组件上传入props
-		 * 4. v-for比v-if优先级高,故下面代码是可行的
-		 *    <li v-for="todo in todos" v-if="!todo.isComplete">
-		 * 5. 要先判断,就在外部包裹一个v-if
-		 */
-		
+
 		
 	</script>
 </html>
