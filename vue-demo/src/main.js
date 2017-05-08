@@ -1,22 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-
 /**
  * 应用router
  */
 import routes from './router/router'
-
 /**
  * 应用store
  */
 import store from './store/'
-
 /**
  * hash
  */
 import {routerMode} from './config/env'
-
 import './config/rem'
 import FastClick from 'fastclick'
 

@@ -41,6 +41,9 @@
         },
 
         mounted(){
+        	/**
+        	 * 获取url后面的参数
+        	 */
             this.cityid = this.$route.params.cityid;
             //获取当前城市名字
             currentcity(this.cityid).then(res => {
