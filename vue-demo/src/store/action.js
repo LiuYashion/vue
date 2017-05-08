@@ -1,21 +1,18 @@
 import { getUser, getAddressList } from '../service/getData'
 import { GET_USERINFO, SAVE_ADDRESS } from './mutation-types.js'
 
-
+/**
+ * {async}表示该方法为异步函数
+ * {await}表示同步等待结果
+ */
 
 export default {
 
-	async getUserInfo({
-		commit,
-		state
-	}) {
+	async getUserInfo({ commit, state }){
 		let res = await getUser();
 		commit(GET_USERINFO, res)
 	},
-	async saveAddress({
-		commit,
-		state
-	}) {
+	async saveAddress({ commit, state }){
 
 		if(state.removeAddress.length > 0) return;
 

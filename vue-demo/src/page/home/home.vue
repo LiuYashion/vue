@@ -98,7 +98,10 @@ export default {
             this.groupcity = res;
         })
     },
-
+	
+	/**
+	 * 鉴于dom不识别大小写,dom中的写法为head-top
+	 */
     components:{
         headTop
     },
