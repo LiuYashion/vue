@@ -1,8 +1,10 @@
 <template>
   	<div class="city_container">
+  		
         <head-top :head-title="cityname" go-back='true'>
             <router-link to="/home" slot="changecity" class="change_city">切换城市</router-link>
         </head-top>
+        
         <form class="city_form" v-on:submit.prevent>
             <div>
                 <input type="search" name="city" placeholder="输入学校、商务楼、地址" class="city_input input_style" required v-model='inputVaule'>
@@ -11,14 +13,18 @@
                 <input type="submit" name="submit" class="city_submit input_style" @click='postpois' value="提交">
             </div>
         </form>
+        
         <header v-if="historytitle" class="pois_search_history">搜索历史</header>
+        
         <ul class="getpois_ul">
             <li v-for="(item, index) in placelist" @click='nextpage(index, item.geohash)' :key="index">
                 <h4 class="pois_name ellipsis">{{item.name}}</h4>
                 <p class="pois_address ellipsis">{{item.address}}</p>
             </li>
         </ul>
+        
         <div class="search_none_place" v-if="placeNone">很抱歉！无搜索结果</div>
+        
     </div>
 </template>
 
@@ -42,17 +48,23 @@
 
         mounted(){
         	/**
-        	 * 获取url后面的参数
+        	 * {this.$route.params.cityid}此处的cityid是在路由中定义好的
+        	 * 路由中定义的为{path: '/city/:cityid'}所以跟在url后面的参数,默认为{cityid}
         	 */
             this.cityid = this.$route.params.cityid;
-            //获取当前城市名字
+            
+            /**
+             * 根据id查询当前城市名字
+             */
             currentcity(this.cityid).then(res => {
                 this.cityname = res.name;
             })
+            
             //获取搜索历史记录
             if (getStore('placeHistory')) {
                 this.placelist = JSON.parse(getStore('placeHistory'));
             }
+            
         },
 
         components:{
@@ -64,9 +76,11 @@
         },
 
         methods:{
-            //发送搜索信息inputVaule
+        	
+            /**
+             * 搜索input里面的内容
+             */
             postpois(){
-                //输入值不为空时才发送信息
                 if (this.inputVaule) {
                     searchplace(this.cityid, this.inputVaule).then(res => {
                         this.historytitle = false;
@@ -75,29 +89,36 @@
                     })
                 }
             },
+            
             /**
+             * 这里每点击一次都会存储信息到本地(历史记录)
              * 点击搜索结果进入下一页面时进行判断是否已经有一样的历史记录
              * 如果没有则新增，如果有则不做重复储存，判断完成后进入下一页
              */
             nextpage(index, geohash){
                 let history = getStore('placeHistory');
                 let choosePlace = this.placelist[index];
-                if (history) {
+                if(history){
                     let checkrepeat = false;
                     this.placeHistory = JSON.parse(history);
                     this.placeHistory.forEach(item => {
-                        if (item.geohash == geohash) {
+                        if(item.geohash == geohash) {
                             checkrepeat = true;
                         }
                     })
-                    if (!checkrepeat) {
-                        this.placeHistory.push(choosePlace)
+                    if(!checkrepeat){
+                        this.placeHistory.push(choosePlace)	//如果localstorage没有该条记录,就push一条
                     }
-                }else {
+                }else{
                     this.placeHistory.push(choosePlace)
                 }
                 setStore('placeHistory',this.placeHistory)
-                this.$router.push({path:'/msite', query:{geohash}})
+                
+                /** {调用路由跳转} */
+                this.$router.push({
+                	path:'/msite', 
+                	query:{geohash}
+                })
             }
         }
     }

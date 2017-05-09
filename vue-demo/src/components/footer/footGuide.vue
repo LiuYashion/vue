@@ -20,30 +20,36 @@
 
 	    	</defs>
     	</svg>
+    	
+    	
         <section @click = "gotoAddress({path: '/msite', query: {geohash}})" class="guide_item">
-        	<svg class="icon_style">
+        	<!--<svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('msite') !== -1? '#msiteActive' : '#msite'"></use>
-            </svg>
+            </svg>-->
             <span>外卖</span>
         </section>
+        
         <section @click = "gotoAddress({path: '/search/' + geohash})" class="guide_item">
-        	<svg class="icon_style">
+        	<!--<svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('search') !== -1? '#findActive' : '#find'"></use>
-            </svg>
+            </svg>-->
             <span>搜索</span>
         </section>
+        
         <section @click = "gotoAddress('/order')" class="guide_item">
-        	<svg class="icon_style">
+        	<!--<svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('order') !== -1? '#orderActive' : '#order'"></use>
-            </svg>
+            </svg>-->
             <span>订单</span>
         </section>
+        
         <section @click = "gotoAddress('/profile')" class="guide_item">
-        	<svg class="icon_style">
+        	<!--<svg class="icon_style">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('profile') !== -1? '#profileActive' : '#profile'"></use>
-            </svg>
+            </svg>-->
             <span>我的</span>
         </section>
+        
     </section>
 </template>
 
@@ -67,6 +73,8 @@
             ]),
         },
         methods: {
+
+        	/** {调用router push进去} */
         	gotoAddress(path){
         		this.$router.push(path)
         	}
@@ -103,6 +111,8 @@
 			fill: #ccc;
 		}
 		span{
+			height:1.95rem;
+			line-height:1.95rem;
 			@include sc(.45rem, #666);
 		}
     }

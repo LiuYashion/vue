@@ -7,15 +7,18 @@
 	    			<line x1="15" y1="15" x2="20" y2="20" style="stroke:rgb(255,255,255);stroke-width:2"/>
 	    		</svg>
     		</router-link>
+    		
 			<router-link to="/home" slot="msite-title" class="msite_title">
 				<span class="title_text ellipsis">{{msietTitle}}</span>
 			</router-link>
     	</head-top>
+    	
     	<nav class="msite_nav">
     		<div class="swiper-container">
 		        <div class="swiper-wrapper">
 		            <div class="swiper-slide food_types_container" v-for="(item, index) in foodTypes" :key="index">
-	            		<router-link :to="{path: '/food', query: {geohash, title: foodItem.title, restaurant_category_id: getCategoryId(foodItem.link)}}" v-for="foodItem in item" :key="foodItem.id" class="link_to_food" v-if="foodItem.title !== '预订早餐'">
+	            		<router-link :to="{path: '/food', query: { geohash, title: foodItem.title, restaurant_category_id: getCategoryId(foodItem.link) }}" 
+	            			v-for="foodItem in item" :key="foodItem.id" class="link_to_food" v-if="foodItem.title !== '预订早餐'">
 	            			<figure>
 	            				<img :src="imgBaseUrl + foodItem.image_url">
 	            				<figcaption>{{foodItem.title}}</figcaption>
@@ -32,6 +35,7 @@
 		        <div class="swiper-pagination"></div>
 		    </div>
     	</nav>
+    	
     	<div class="shop_list_container">
 	    	<header class="shop_header">
 	    		<svg class="shop_icon">
@@ -39,30 +43,39 @@
 	    		</svg>
 	    		<span class="shop_header_title">附近商家</span>
 	    	</header>
-	    	<shop-list v-if="hasGetData" :geohash="geohash"></shop-list>
+	    	<shop-list class="shop-list" v-if="hasGetData" :geohash="geohash"></shop-list>
     	</div>
+    	
     	<foot-guide></foot-guide>
+    	
     </div>    
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+
 import {imgBaseUrl} from 'src/config/env'
+
+import {mapMutations} from 'vuex'
 import headTop from 'src/components/header/head'
 import footGuide from 'src/components/footer/footGuide'
+
+/** {shopList}是商品列表
+ * 里面填充着一个一个的li
+ */
 import shopList from 'src/components/common/shoplist'
 import {msiteAdress, msiteFoodTypes, msiteShopList} from 'src/service/getData'
+
 import 'src/plugins/swiper.min.js'
 import 'src/style/swiper.min.css'
 
 export default {
 	data(){
         return {
-        	geohash: '', // city页面传递过来的地址geohash
-            msietTitle: '请选择地址...', // msiet页面头部标题
-            foodTypes: [], // 食品分类列表
-            hasGetData: false, //是否已经获取地理位置数据，成功之后再获取商铺列表信息
-            imgBaseUrl, //图片域名地址
+        	geohash: '', 				// city页面传递过来的地址geohash
+            msietTitle: '请选择地址...',	// msiet页面头部标题
+            foodTypes: [], 				// 食品分类列表
+            hasGetData: false, 			// 是否已经获取地理位置数据，成功之后再获取商铺列表信息
+            imgBaseUrl, 				// 图片域名地址
         }
     },
     async beforeMount(){
@@ -87,7 +100,10 @@ export default {
     		for (let i = 0, j = 0; i < resLength; i += 8, j++) {
     			foodArr[j] = resArr.splice(0, 8);
     		}
+    		
     		this.foodTypes = foodArr;
+    		console.log( this.foodTypes )
+    		
         }).then(() => {
         	//初始化swiper
         	new Swiper('.swiper-container', {
@@ -105,11 +121,17 @@ export default {
 
     },
     methods: {
+ 		/**
+ 		 * RECORD_ADDRESS:	记录当前经度纬度
+ 		 * SAVE_GEOHASH:	保存geohash
+ 		 */
     	...mapMutations([
     		'RECORD_ADDRESS', 'SAVE_GEOHASH'
     	]),
+    	
     	// 解码url地址，求去restaurant_category_id值
     	getCategoryId(url){
+    	
     		let urlData = decodeURIComponent(url.split('=')[1].replace('&target_name',''));
     		if (/restaurant_category_id/gi.test(urlData)) {
     			return JSON.parse(urlData).restaurant_category_id.id

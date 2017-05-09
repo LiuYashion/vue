@@ -1,9 +1,10 @@
 <template>
   	<div>
-        <head-top signin-up='home'>
+  		
+        <head-top signin-up='home' head-title='城市' go-back='' class='slot-wrap'>
             <span slot='logo' class="head_logo"  @click="reload">ele.me</span>
         </head-top>
-        
+         
         <nav class="city_nav">
             <div class="city_tip">
                 <span>当前定位城市：</span>
