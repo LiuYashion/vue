@@ -59,10 +59,8 @@ import {mapMutations} from 'vuex'
 import headTop from 'src/components/header/head'
 import footGuide from 'src/components/footer/footGuide'
 
-/** {shopList}是商品列表
- * 里面填充着一个一个的li
- */
 import shopList from 'src/components/common/shoplist'
+
 import {msiteAdress, msiteFoodTypes, msiteShopList} from 'src/service/getData'
 
 import 'src/plugins/swiper.min.js'
@@ -80,19 +78,22 @@ export default {
     },
     async beforeMount(){
 		this.geohash = this.$route.query.geohash || 'wtw3sm0q087';
-		//保存geohash 到vuex
+		
+		/**{保存geohash 到vuex}*/
 		this.SAVE_GEOHASH(this.geohash);
-    	//获取位置信息
+		
+    	/**{获取位置信息}*/
     	let res = await msiteAdress(this.geohash);
     	this.msietTitle = res.name;
 
-    	// 记录当前经度纬度
+    	/**{记录当前经度纬度}*/
     	this.RECORD_ADDRESS(res);
 
     	this.hasGetData = true;
     },
     mounted(){
-        //获取导航食品类型列表
+    	
+        /**{顶部swiper4*2的食物类型}*/
        	msiteFoodTypes(this.geohash).then(res => {
        		let resLength = res.length;
        		let resArr = res.concat([]); // 返回一个新的数组
@@ -102,7 +103,6 @@ export default {
     		}
     		
     		this.foodTypes = foodArr;
-    		console.log( this.foodTypes )
     		
         }).then(() => {
         	//初始化swiper
@@ -124,6 +124,7 @@ export default {
  		/**
  		 * RECORD_ADDRESS:	记录当前经度纬度
  		 * SAVE_GEOHASH:	保存geohash
+ 		 * {此处一定要引入}
  		 */
     	...mapMutations([
     		'RECORD_ADDRESS', 'SAVE_GEOHASH'
@@ -138,6 +139,7 @@ export default {
     		}else{
     			return ''
     		}
+    		
     	}
     },
     watch: {

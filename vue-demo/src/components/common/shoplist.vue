@@ -51,29 +51,43 @@
 		</aside>
 		<footer class="loader_more" v-show="preventRepeatReuqest">正在加载更多商家...</footer>
 		<div ref="abc" style="background-color: red;"></div>
+		
 		<transition name="loading">
-			<loading v-show="showLoading"></loading>
+			<loading class="loading-dom" v-show="showLoading"></loading>
 		</transition>
 	</div>
 </template>
 
 <script>
 
+/**	{shopList}是商品列表,里面填充着li,滑动到底部的时候能够自动加载更多
+ */
 import {mapState} from 'vuex'
 import {shopList} from 'src/service/getData'
+
+/**{showBack}显示返回顶部按钮
+ * {animate}
+ */
 import {showBack, animate} from 'src/config/mUtils'
+/**
+ * {loadMore}
+ * {getImgPath}
+ */
 import {loadMore, getImgPath} from './mixin'
+
+/**	引入组件{loading, ratingStar}
+ */
 import loading from './loading'
 import ratingStar from './ratingStar'
 
 export default {
 	data(){
 		return {
-			offset: 0, // 批次加载店铺列表，每次加载20个 limit = 20
-			shopListArr:[], // 店铺列表数据
-			preventRepeatReuqest: false, //到达底部加载数据，防止重复加载
-			showBackStatus: false, //显示返回顶部按钮
-			showLoading: true, //显示加载动画
+			offset: 0, 						//批次加载店铺列表，每次加载20个 limit = 20
+			shopListArr:[], 				//店铺列表数据
+			preventRepeatReuqest: false, 	//到达底部加载数据，防止重复加载
+			showBackStatus: false, 			//显示返回顶部按钮
+			showLoading: true, 				//显示加载动画
 		}
 	},
 	mounted(){
@@ -92,36 +106,49 @@ export default {
 	},
 	methods: {
 		async initData(){
-			//获取数据
+			/**
+			 * 获取shoplist的数据,请求完毕隐藏loading动画
+			 */
 			let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
 			this.shopListArr = [...res];
 			this.hideLoading();
-			//开始监听scrollTop的值，达到一定程度后显示返回顶部按钮
+			
+			/** 
+			 * 开始监听scrollTop的值，达到一定程度后显示返回顶部按钮
+			 */
 			showBack(status => {
 				this.showBackStatus = status;
 			});
+			
 		},
-		//到达底部加载更多数据
+		/**
+		 * 到达底部加载更多数据
+		 */
 		async loaderMore(){
-			//防止重复请求
+			
+			/**{防止重复请求}*/
 			if (this.preventRepeatReuqest) {
 				return 
 			}
+			
 			this.showLoading = true;
 			this.preventRepeatReuqest = true;
 
-			//数据的定位加20位
+			/**{数据的定位加20位}*/
 			this.offset += 20;
 			let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
 			this.hideLoading();
 			this.shopListArr = [...this.shopListArr, ...res];
-			//当获取数据小于20，说明没有更多数据，不需要再次请求数据
+			
+			/**{当获取数据小于20，说明没有更多数据，不需要再次请求数据}*/
 			if (res.length < 20) {
 				return
 			}
 			this.preventRepeatReuqest = false;
 		},
-		//返回顶部
+		/**
+		 * {返回顶部的动画效果}
+		 */
 		backTop(){
 			animate(document.body, {scrollTop: '0'}, 400,'ease-out');
 		},
@@ -137,7 +164,7 @@ export default {
 				this.shopListArr = this.shopListArr.reverse();
 			}
 		},
-		//开发环境与编译环境loading隐藏方式不同
+		/**{开发环境与编译环境loading隐藏方式不同}*/
 		hideLoading(){
 			if (process.env.NODE_ENV !== 'development') {
 				clearTimeout(this.timer);
