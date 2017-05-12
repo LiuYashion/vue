@@ -37,8 +37,12 @@ export const loadMore = {
 					heightEl = el;
 				}
 				
-				console.log( heightEl )
-
+				/**
+				 * {scrollEl: }
+				 * {heightEl: }
+				 * {给el绑定时间}
+				 */
+				
 				el.addEventListener('touchstart', () => {
 					height = heightEl.clientHeight;
 					if (scrollType == 2) {
