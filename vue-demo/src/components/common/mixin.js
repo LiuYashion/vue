@@ -1,14 +1,23 @@
-import {
-	getStyle
-} from '../../config/mUtils'
-import {
-	imgBaseUrl
-} from '../../config/env'
+import { getStyle } from '../../config/mUtils'
+import { imgBaseUrl } from '../../config/env'
 
+
+
+
+/**
+ * {directives}
+ * {仍然需要对纯 DOM元素进行底层操作, 这时候就会用到自定义指令}
+ */
 export const loadMore = {
 	directives: {
 		'load-more': {
+			/**
+			 * {bind只调用一次, #此处我认为就是往dom上添加原生方法}
+			 * {el: 绑定的dom对象<div></div>这种}
+			 * {binding: 对象}
+			 */
 			bind: (el, binding) => {
+				
 				let windowHeight = window.screen.height;
 				let height;
 				let setTop;
@@ -27,6 +36,8 @@ export const loadMore = {
 					scrollEl = document.body;
 					heightEl = el;
 				}
+				
+				console.log( heightEl )
 
 				el.addEventListener('touchstart', () => {
 					height = heightEl.clientHeight;
