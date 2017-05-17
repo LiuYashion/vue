@@ -97,6 +97,9 @@ export default {
 		loading,
 		ratingStar,
 	},
+	
+	/**{这些值都是从父级传来的}*/
+	
 	props: ['restaurantCategoryId', 'restaurantCategoryIds', 'sortByType', 'deliveryMode', 'supportIds', 'confirmSelect', 'geohash'],
 	mixins: [loadMore, getImgPath],
 	computed: {
@@ -107,22 +110,23 @@ export default {
 	methods: {
 		async initData(){
 			/**
-			 * 获取shoplist的数据,请求完毕隐藏loading动画
+			 * {获取shoplist的数据,请求完毕隐藏loading动画}
 			 */
 			let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
 			this.shopListArr = [...res];
 			this.hideLoading();
 			
 			/** 
-			 * 开始监听scrollTop的值，达到一定程度后显示返回顶部按钮
+			 * {开始监听scrollTop的值，达到一定程度后显示返回顶部按钮}
 			 */
 			showBack(status => {
 				this.showBackStatus = status;
 			});
 			
 		},
+		
 		/**
-		 * 到达底部加载更多数据
+		 * {通过v-load-more判断后 执行该方法, 然后在请求外卖数据}
 		 */
 		async loaderMore(){
 			
@@ -164,6 +168,7 @@ export default {
 				this.shopListArr = this.shopListArr.reverse();
 			}
 		},
+		
 		/**{开发环境与编译环境loading隐藏方式不同}*/
 		hideLoading(){
 			if (process.env.NODE_ENV !== 'development') {
@@ -178,15 +183,16 @@ export default {
 		},
 	},
 	watch: {
-		//监听父级传来的restaurantCategoryIds，当值发生变化的时候重新获取餐馆数据，作用于排序和筛选
+		/**{watch中的方法参数有两部分(newValue, oldValue)}*/
+		/**{监听 restaurantCategoryIds，当值发生变化的时候重新获取餐馆数据，作用于排序和筛选}*/
 		restaurantCategoryIds: function (value){
 			this.listenPropChange();
 		},
-		//监听父级传来的排序方式
+		/**{监听父级传来的排序方式}*/
 		sortByType: function (value){
 			this.listenPropChange();
 		},
-		//监听父级的确认按钮是否被点击，并且返回一个自定义事件通知父级，已经接收到数据，此时父级才可以清除已选状态
+		/**{监听父级的确认按钮是否被点击，并且返回一个自定义事件通知父级，已经接收到数据，此时父级才可以清除已选状态}*/
 		confirmSelect: function (value){
 			this.listenPropChange();
 			this.$emit('DidConfrim');

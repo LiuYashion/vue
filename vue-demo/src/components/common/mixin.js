@@ -7,6 +7,7 @@ import { imgBaseUrl } from '../../config/env'
 /**
  * {directives}
  * {仍然需要对纯 DOM元素进行底层操作, 这时候就会用到自定义指令}
+ * {这里的逻辑为用load-more判断滚动位置, 判断合适执行binding.value()}
  */
 export const loadMore = {
 	directives: {
@@ -15,6 +16,8 @@ export const loadMore = {
 			 * {bind只调用一次, #此处我认为就是往dom上添加原生方法}
 			 * {el: 绑定的dom对象<div></div>这种}
 			 * {binding: 对象}
+			 * {	name: 指令名，不包括 v- 前缀}
+			 * {	value: 指令的绑定值， 例如： v-my-directive="1 + 1", value 的值是 2。}
 			 */
 			bind: (el, binding) => {
 				
@@ -28,6 +31,8 @@ export const loadMore = {
 				let scrollEl;
 				let heightEl;
 				let scrollType = el.attributes.type && el.attributes.type.value;
+				
+				
 				let scrollReduce = 2;
 				if (scrollType == 2) {
 					scrollEl = el;
@@ -40,7 +45,7 @@ export const loadMore = {
 				/**
 				 * {scrollEl: }
 				 * {heightEl: }
-				 * {给el绑定时间}
+				 * {给el绑定事件}
 				 */
 				
 				el.addEventListener('touchstart', () => {
