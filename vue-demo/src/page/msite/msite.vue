@@ -7,17 +7,17 @@
 	    			<line x1="15" y1="15" x2="20" y2="20" style="stroke:rgb(255,255,255);stroke-width:2"/>
 	    		</svg>
     		</router-link>
-    		
+
 			<router-link to="/home" slot="msite-title" class="msite_title">
 				<span class="title_text ellipsis">{{msietTitle}}</span>
 			</router-link>
     	</head-top>
-    	
+
     	<nav class="msite_nav">
     		<div class="swiper-container">
 		        <div class="swiper-wrapper">
 		            <div class="swiper-slide food_types_container" v-for="(item, index) in foodTypes" :key="index">
-	            		<router-link :to="{path: '/food', query: { geohash, title: foodItem.title, restaurant_category_id: getCategoryId(foodItem.link) }}" 
+	            		<router-link :to="{path: '/food', query: { geohash, title: foodItem.title, restaurant_category_id: getCategoryId(foodItem.link) }}"
 	            			v-for="foodItem in item" :key="foodItem.id" class="link_to_food" v-if="foodItem.title !== '预订早餐'">
 	            			<figure>
 	            				<img :src="imgBaseUrl + foodItem.image_url">
@@ -29,13 +29,13 @@
 	            				<img :src="imgBaseUrl + foodItem.image_url">
 	            				<figcaption>{{foodItem.title}}</figcaption>
 	            			</figure>
-	            		</a>	
+	            		</a>
 		            </div>
 		        </div>
 		        <div class="swiper-pagination"></div>
 		    </div>
     	</nav>
-    	
+
     	<div class="shop_list_container">
 	    	<header class="shop_header">
 	    		<svg class="shop_icon">
@@ -43,12 +43,12 @@
 	    		</svg>
 	    		<span class="shop_header_title">附近商家</span>
 	    	</header>
-	    	<shop-list class="shop-list" v-if="hasGetData" :geohash="geohash"></shop-list>
+	    	<shop-list class="shop-list" v-if="hasGetData" :geohash="geohash" ></shop-list>
     	</div>
-    	
+
     	<foot-guide></foot-guide>
-    	
-    </div>    
+
+    </div>
 </template>
 
 <script>
@@ -77,11 +77,13 @@ export default {
         }
     },
     async beforeMount(){
+
+
 		this.geohash = this.$route.query.geohash || 'wtw3sm0q087';
-		
+
 		/**{保存geohash 到vuex}*/
 		this.SAVE_GEOHASH(this.geohash);
-		
+
     	/**{获取位置信息}*/
     	let res = await msiteAdress(this.geohash);
     	this.msietTitle = res.name;
@@ -92,7 +94,7 @@ export default {
     	this.hasGetData = true;
     },
     mounted(){
-    	
+
         /**{顶部swiper4*2的食物类型}*/
        	msiteFoodTypes(this.geohash).then(res => {
        		let resLength = res.length;
@@ -101,9 +103,9 @@ export default {
     		for (let i = 0, j = 0; i < resLength; i += 8, j++) {
     			foodArr[j] = resArr.splice(0, 8);
     		}
-    		
+
     		this.foodTypes = foodArr;
-    		
+
         }).then(() => {
         	//初始化swiper
         	new Swiper('.swiper-container', {
@@ -122,24 +124,29 @@ export default {
     },
     methods: {
  		/**
- 		 * RECORD_ADDRESS:	记录当前经度纬度
- 		 * SAVE_GEOHASH:	保存geohash
- 		 * {此处一定要引入}
+ 		 * {RECORD_ADDRESS:	记录当前经度纬度}
+ 		 * {SAVE_GEOHASH:	保存geohash}
+ 		 * {此处一定要引入, 用于改变store中的state}
  		 */
+ 		
     	...mapMutations([
     		'RECORD_ADDRESS', 'SAVE_GEOHASH'
     	]),
-    	
+
     	// 解码url地址，求去restaurant_category_id值
+    	/**{甜品饮料,汉堡薯条}*/
     	getCategoryId(url){
-    	
+
     		let urlData = decodeURIComponent(url.split('=')[1].replace('&target_name',''));
+
+    		console.log(urlData)
+
     		if (/restaurant_category_id/gi.test(urlData)) {
     			return JSON.parse(urlData).restaurant_category_id.id
     		}else{
     			return ''
     		}
-    		
+
     	}
     },
     watch: {

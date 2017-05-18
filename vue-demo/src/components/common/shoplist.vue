@@ -29,7 +29,7 @@
 					</h5>
 					<h5 class="fee_distance">
 						<section class="fee">
-							¥{{item.float_minimum_order_amount}}起送 
+							¥{{item.float_minimum_order_amount}}起送
 							<span class="segmentation">/</span>
 							{{item.piecewise_agent_fee.tips}}
 						</section>
@@ -51,7 +51,7 @@
 		</aside>
 		<footer class="loader_more" v-show="preventRepeatReuqest">正在加载更多商家...</footer>
 		<div ref="abc" style="background-color: red;"></div>
-		
+
 		<transition name="loading">
 			<loading class="loading-dom" v-show="showLoading"></loading>
 		</transition>
@@ -90,76 +90,110 @@ export default {
 			showLoading: true, 				//显示加载动画
 		}
 	},
+
+	/**
+	 * 生命周期-加载后
+	 * @return {mounted}
+	 */
 	mounted(){
 		this.initData();
 	},
+
+	/**
+	 * 自定义组件
+	 * @type {components}
+	 */
 	components: {
 		loading,
-		ratingStar,
+		ratingStar
 	},
-	
-	/**{这些值都是从父级传来的}*/
-	
-	props: ['restaurantCategoryId', 'restaurantCategoryIds', 'sortByType', 'deliveryMode', 'supportIds', 'confirmSelect', 'geohash'],
+
+	/**
+	 * 通过this.key获取
+	 * geohash--from--msite
+	 * @type {props}
+	 */
+	props: ['restaurantCategoryId', 'restaurantCategoryIds', 'sortByType', 'deliveryMode', 'supportIds', 'confirmSelect', 'geohash', 'misteProp'],
+
+	/**
+	 * 用以绑定自定义属性
+	 * @type {minxin}
+	 */
 	mixins: [loadMore, getImgPath],
+
+	/**
+	 * 动态获得store.state
+	 * 通过this.latitude	this.longitude访问
+	 * @type {computed}
+	 */
 	computed: {
 		...mapState([
-			'latitude','longitude'
+			'latitude',
+			'longitude'
 		])
 	},
+
+	/**
+	 * 方法
+	 * @type {methods}
+	 */
 	methods: {
 		async initData(){
-			/**
-			 * {获取shoplist的数据,请求完毕隐藏loading动画}
-			 */
+
 			let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
 			this.shopListArr = [...res];
 			this.hideLoading();
-			
-			/** 
-			 * {开始监听scrollTop的值，达到一定程度后显示返回顶部按钮}
+
+			/**
+			 * 设置是否显示返回顶部按钮
+			 * @return {boolean}
 			 */
 			showBack(status => {
 				this.showBackStatus = status;
 			});
-			
+
 		},
-		
+
 		/**
-		 * {通过v-load-more判断后 执行该方法, 然后在请求外卖数据}
+		 * 通过与mixin的绑定,有minxin来判断是否执行
+		 * @return {Promise} [加载下一页的内容]
 		 */
 		async loaderMore(){
-			
-			/**{防止重复请求}*/
+
 			if (this.preventRepeatReuqest) {
-				return 
+				return
 			}
-			
+
 			this.showLoading = true;
 			this.preventRepeatReuqest = true;
 
-			/**{数据的定位加20位}*/
 			this.offset += 20;
 			let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
 			this.hideLoading();
 			this.shopListArr = [...this.shopListArr, ...res];
-			
+
 			/**{当获取数据小于20，说明没有更多数据，不需要再次请求数据}*/
 			if (res.length < 20) {
 				return
 			}
 			this.preventRepeatReuqest = false;
 		},
-		/**
-		 * {返回顶部的动画效果}
-		 */
+
 		backTop(){
 			animate(document.body, {scrollTop: '0'}, 400,'ease-out');
 		},
-		//监听父级传来的数据发生变化时，触发此函数重新根据属性值获取数据
+
+		/**
+		 * 在watch中会触发的回调
+		 * @return {Promise}
+		 */
 		async listenPropChange(){
 			this.showLoading = true;
 			this.offset = 0;
+			/**
+			 * 重新请求shoplist,因为改变的是参数,需要用参数去请求结果,故此处重新刷新
+			 * @type {[type]}
+			 */
 			let res = await shopList(this.latitude, this.longitude, this.offset, '', this.restaurantCategoryIds, this.sortByType, this.deliveryMode, this.supportIds);
 			this.hideLoading();
 			//考虑到本地模拟数据是引用类型，所以返回一个新的数组
@@ -168,7 +202,7 @@ export default {
 				this.shopListArr = this.shopListArr.reverse();
 			}
 		},
-		
+
 		/**{开发环境与编译环境loading隐藏方式不同}*/
 		hideLoading(){
 			if (process.env.NODE_ENV !== 'development') {
@@ -182,8 +216,14 @@ export default {
 			}
 		},
 	},
+
+	/**
+	 * 监控父级传下来props的变化
+	 * watch中的方法参数有两部分(newValue, oldValue)
+	 * @type {watch}
+	 */
 	watch: {
-		/**{watch中的方法参数有两部分(newValue, oldValue)}*/
+
 		/**{监听 restaurantCategoryIds，当值发生变化的时候重新获取餐馆数据，作用于排序和筛选}*/
 		restaurantCategoryIds: function (value){
 			this.listenPropChange();
@@ -197,6 +237,7 @@ export default {
 			this.listenPropChange();
 			this.$emit('DidConfrim');
 		}
+
 	}
 }
 </script>
