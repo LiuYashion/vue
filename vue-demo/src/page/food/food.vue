@@ -12,7 +12,7 @@
     				</div>
     			</div>
 	    		<transition name="showlist" v-show="category">
-	    			<section v-show="sortBy == 'food'" class="category_container sort_detail_type">
+	    			<section v-show=" sortBy == 'food' " class="category_container sort_detail_type">
 	    				<section class="category_left">
 	    					<ul>
 	    						<li v-for="(item, index) in category" :key="index" class="category_left_li" :class="{category_active:restaurant_category_id == item.id}" @click="selectCategoryName(item.id, index)">
@@ -223,6 +223,7 @@ export default {
 			this.foodTitle = this.headTitle;
 			this.restaurant_category_id = this.$route.query.restaurant_category_id;
 			//防止刷新页面时，vuex状态丢失，经度纬度需要重新获取，并存入vuex	
+			
 			if (!this.latitude) {
 		    	//获取位置信息
 		    	let res = await msiteAdress(this.geohash);
@@ -266,18 +267,23 @@ export default {
     			}
     		}
     	},
-		//选中Category左侧列表的某个选项时，右侧渲染相应的sub_categories列表
+    	
+		/**
+		 * {选中Category左侧列表的某个选项时，右侧渲染相应的sub_categories列表}
+		 * {点击第一个的时候表示没有选}
+		 */
 		selectCategoryName(id, index){
-			//第一个选项 -- 全部商家 因为没有自己的列表，所以点击则默认获取选所有数据
+			
 			if (index === 0) {
 				this.restaurant_category_ids = null;
 				this.sortBy = '';
-			//不是第一个选项时，右侧展示其子级sub_categories的列表
+			
 			}else{
 				this.restaurant_category_id = id;
 				this.categoryDetail = this.category[index].sub_categories;
 
 			}
+			
 		},
 		//选中Category右侧列表的某个选项时，进行筛选，重新获取数据并渲染
 		getCategoryIds(id, name){
@@ -386,14 +392,16 @@ export default {
 				}
 			}
 		}
+		
 		.showlist-enter-active, .showlist-leave-active {
-			transition: all .3s;
+			transition: all 30s;
 			transform: translateY(0);
 		}
 		.showlist-enter, .showlist-leave-active {
 			opacity: 0;
 			transform: translateY(-100%);
 		}
+		
 		.sort_detail_type{
 			width: 100%;
 			position: absolute;
@@ -551,6 +559,7 @@ export default {
 					font-size: 0.8rem;
 					line-height: 1.8rem;
 					border-radius: 0.2rem;
+					
 				}
 				.clear_all{
 					background-color: #fff;
@@ -564,6 +573,7 @@ export default {
 					span{
 						color: #fff;
 					}
+					
 				}
 			}
 		}
